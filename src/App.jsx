@@ -1,15 +1,18 @@
 import { useState } from 'react'
-
-
+import LandingPage from './Home.jsx/HomePage'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navtest from './Home.jsx/Nav';
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      
-      <h1 className='text-4xl text-center text-red-600 hover:text-amber-400'>Hello coba</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/Home" element={<LandingPage />}></Route>
+          <Route path="/" element={<Navtest />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
 export default App
