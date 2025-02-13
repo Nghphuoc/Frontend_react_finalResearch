@@ -7,7 +7,7 @@ const HeroSection = () => {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTQ4ONOldf2Py6r8QJir_qzArGOEM8cKzbg&s",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS26tCPU9vYlSFcJCiub_OW--El-WlUQt-G6A&s",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZs5CJwp_mytX7y5bj7KXv2SwoKSdYnJAEdg&s",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8x4TojfppPqOQq_mU5RNI_qK3M7FAb8z1PA&s",
+    "https://i.pinimg.com/736x/ef/bf/05/efbf05e63012623a8a37869eb6f79237.jpg",
   ];
 
   return (
