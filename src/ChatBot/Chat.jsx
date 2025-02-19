@@ -32,8 +32,56 @@ function ChatBot() {
 
       // Lấy phản hồi từ bot và cập nhật vào giao diện
       if (data.length > 0) {
-        setMessages([...newMessages, { text: data[0].text, sender: "bot" }]);
+        try {
+          // Kiểm tra xem có phải JSON không
+          // const parsedResponse = JSON.parse(data[0].text);
+          // console.log(parsedResponse);
+          
+          let parsedResponse;
+          try {
+            parsedResponse = JSON.parse(data[0].text);
+          } catch (error) {
+            parsedResponse = data[0].text; // Nếu không phải JSON, giữ nguyên văn bản
+          }
+          // Nếu là mảng sản phẩm
+          if (Array.isArray(parsedResponse)) {
+            const product = parsedResponse[0]; // Lấy sản phẩm đầu tiên
+            const message = (
+              <>
+                <p>
+                  <strong>📌 {product.productName}</strong>
+                </p>
+                <p>📝 {product.description}</p>
+                <p>
+                  💰 Giá: <strong>{product.price}$</strong>
+                </p>
+                <p>📦 Tồn kho: {product.stock_quantity}</p>
+                <img
+                  src={product.imageUrl}
+                  alt={product.productName}
+                  style={{ width: "100px", borderRadius: "8px" }}
+                />
+              </>
+            );
+
+            // setMessages([
+            //   ...newMessages,
+            //   { text: message, sender: "bot", isHTML: true },
+            // ]);
+            setMessages([...newMessages, { text: message, sender: "bot" }]);
+
+          } else {
+            setMessages([
+              ...newMessages,
+              { text: data[0].text, sender: "bot" },
+            ]);
+          }
+        } catch (error) {
+          console.error("Lỗi khi parse JSON:", error);
+          setMessages([...newMessages, { text: data[0].text, sender: "bot" }]);
+        }
       }
+
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
       setMessages([
@@ -77,9 +125,15 @@ function ChatBot() {
                     : "bg-gray-200 text-gray-800 self-start"
                 }`}
               >
-                {msg.text}
+
+                {msg.isHTML ? (
+                  <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+                ) : (
+                  msg.text
+                )}
               </div>
             ))}
+
           </div>
 
           {/* Ô nhập nội dung */}

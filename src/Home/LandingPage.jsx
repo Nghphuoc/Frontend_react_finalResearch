@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 const LandingPage = () => {
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Navbar />
       <HeroSection />
       <ProductGrid />

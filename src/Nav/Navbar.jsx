@@ -4,23 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { PiShoppingCartFill } from "react-icons/pi";
 import { FaUser } from "react-icons/fa";
 function NavBar() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-    
-      function handelClickCart(){
-        navigate("/uploadimg");
-      }
+  function handelClickCart() {
+    navigate("/cart");
+  }
 
-      function handelClickProfile(){
-        navigate("/userDetail");
-      }
+  function handelClickProfile() {
+    navigate("/userDetail");
+  }
+
+  function handelClickLogout() {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("Authorization");
+    localStorage.removeItem("cartId");
+  }
 
   return (
     <>
       <div className="flex justify-between items-center px-6 py-4 border-b">
         {/* Logo */}
         <div className="flex items-center">
-          <img src="" alt="Logo" className="mr-2" />
+          {/* <img src="" alt="Logo" className="mr-2" /> */}
           <span className="text-3xl font-bold">
             Tech<span className="text-green-500">Shop</span>
           </span>
@@ -39,19 +45,23 @@ function NavBar() {
                       </a>
                     )
                   )} */}
-          <a href="#" className="text-gray-600 hover:text-black">
+          <a href="/" className="text-gray-600 hover:text-black">
             Home
           </a>
-          <a href="#" className="text-gray-600 hover:text-black">
+          <a href="/cart" className="text-gray-600 hover:text-black">
             Collections
           </a>
-          <a href="#" className="text-gray-600 hover:text-black">
+          <a href="/uploadimg" className="text-gray-600 hover:text-black">
             Watches
           </a>
           <a href="#" className="text-gray-600 hover:text-black">
             Quick find
           </a>
-          <a href="#" className="text-gray-600 hover:text-black">
+          <a
+            href="/home"
+            className="text-gray-600 hover:text-black"
+            onClick={handelClickLogout}
+          >
             Pages
           </a>
         </nav>
