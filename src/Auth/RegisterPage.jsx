@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { getInfoUser } from "./ServiceLogin";
+import { div } from "framer-motion/client";
 
 const SignUpLogInForm = () => {
   const [isActive, setIsActive] = useState(false);
@@ -87,19 +88,19 @@ const SignUpLogInForm = () => {
         }
       );
 
-      localStorage.setItem("Authorization", response.data.jwtToken);
-      localStorage.setItem("role", response.data.roles);
-      let role = localStorage.getItem("role");
+      sessionStorage.setItem("Authorization", response.data.jwtToken);
+      sessionStorage.setItem("role", response.data.roles);
+      let role = sessionStorage.getItem("role");
       console.log(role);
 
-      const Authorization = localStorage.getItem("Authorization");
+      const Authorization = sessionStorage.getItem("Authorization");
       console.log(Authorization)
 
       const responseUser = await getInfoUser(loginRequest);
       console.log("data user", responseUser);
-      localStorage.setItem("userId", responseUser.data.userId);
-      localStorage.setItem("userName", responseUser.data.fullName);
-      localStorage.setItem("cartId",responseUser.data.cart.cartId)
+      sessionStorage.setItem("userId", responseUser.data.userId);
+      sessionStorage.setItem("userName", responseUser.data.fullName);
+      sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
       toast.success("login successfully!!!");
 
       if (role === "ROLE_ADMIN") {
@@ -108,7 +109,7 @@ const SignUpLogInForm = () => {
         navigate("/userDetail");
       }
 
-      localStorage.removeItem("role");
+      sessionStorage.removeItem("role");
     } catch (error) {
       toast.error("Invalid credentials");
     } finally {
@@ -119,6 +120,7 @@ const SignUpLogInForm = () => {
   };
   // from-white to-indigo-200
   return (
+    
     <div className="bg-gradient-to-tl from-white to-indigo-200 min-h-screen flex justify-center items-center">
       <div className=" flex justify-center items-center min-h-screen">
         <div className={`container ${isActive ? "active" : ""} `}>

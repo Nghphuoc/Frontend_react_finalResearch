@@ -15,15 +15,15 @@ function NavBar() {
   }
 
   function handelClickLogout() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("Authorization");
-    localStorage.removeItem("cartId");
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("Authorization");
+    sessionStorage.removeItem("cartId");
   }
 
   return (
     <>
-      <div className="flex justify-between items-center px-6 py-4 border-b">
+      <div className=" flex justify-between items-center px-6 py-4 border-b bg-gray-100 shadow-md  ">
         {/* Logo */}
         <div className="flex items-center">
           {/* <img src="" alt="Logo" className="mr-2" /> */}
@@ -54,7 +54,7 @@ function NavBar() {
           <a href="/uploadimg" className="text-gray-600 hover:text-black">
             Watches
           </a>
-          <a href="#" className="text-gray-600 hover:text-black">
+          <a href="/detail" className="text-gray-600 hover:text-black">
             Quick find
           </a>
           <a
@@ -75,17 +75,17 @@ function NavBar() {
             <button onClick={handelClickProfile}>
               <FaUser />
             </button>
-            <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">
+            {/* <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">
               4
-            </span>
+            </span> */}
           </div>
           <div className="relative text-3xl pr-3 text-[#16A34A]">
             <button onClick={handelClickCart}>
               <PiShoppingCartFill />
             </button>
-            <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">
+            {/* <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full px-2">
               1
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

@@ -4,8 +4,7 @@ import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
   //const navigator = useNavigate();
-  const token = localStorage.getItem("Authorization");
-  console.log(token);
-  return token ? children : <Navigate to="/login" />;
+  const token = sessionStorage.getItem("Authorization");
+  return token ? children : <Navigate to="/home" />;
 };
 export default PrivateRoute;

@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 const ProductCard = ({ product }) => {
 
   const navigate = useNavigate();
-  const cartId = localStorage.getItem("cartId");
+  const cartId = sessionStorage.getItem("cartId");
 
   function handleClickMoreInfo(id){
     navigate(`/detail/${id}`); // more information product
@@ -26,29 +26,6 @@ const ProductCard = ({ product }) => {
   }
 }
 
-// const handleClickAddToCart = async (productId) => {
-//   if (!cartId || !productId) {
-//     toast.error("Please Login to Buy Product");
-//     return;
-//   }
-
-//   try {
-//     const cartResponse = await addProductToCart(cartId, productId);
-//     // Kiểm tra nếu phản hồi không hợp lệ hoặc bị lỗi
-//     if (cartResponse && cartResponse.success) {
-//       toast.success("Product added to cart successfully.");
-//     } else {
-//       const errorMessage =
-//         cartResponse?.message ||
-//         "Failed to add product to cart. Please try again.";
-//       toast.error(errorMessage);
-//     }
-//   } catch (error) {
-//     // Nếu có lỗi trong quá trình gọi API
-//     console.error("Error adding product to cart:", error);
-//     toast.error(`Error occurred: ${error.message || "Unknown error"}`);
-//   }
-// };
   return (
     <>
     <Toaster/>
@@ -61,15 +38,15 @@ const ProductCard = ({ product }) => {
           className="mx-auto mb-4 rounded-lg"
           onClick={() => handleClickMoreInfo(product.productId)}
         />
-        <h2 className="font-bold text-sm">{product.productName}</h2>
+        <h4 className="font-bold text-left text-sm">{product.productName}</h4>
         <div className="text-yellow-500 mb-2 flex justify-center space-x-1">
           {[...Array(5)].map((_, i) => (
             <i key={i} className="fas fa-star"></i>
           ))}
         </div>
-        <p className="text-red-500 mb-4"> ${product.price}</p>
+        <p className="text-red-500 font-semibold mb-4"> ${product.price}</p>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          className=" bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition"
           onClick={() => handleClickAddToCart(product.productId)}
         >
           Add to cart

@@ -4,12 +4,13 @@ import HeroSection from "./HeroSection";
 import ProductGrid from "../Product/ProductGrid ";
 import Footer from "../Foot/Footer";
 import ChatBot from "../ChatBot/Chat";
-import { useParams } from "react-router-dom";
 
 const LandingPage = () => {
   return (
     <div className="bg-white min-h-screen">
-      <Navbar />
+      <div className="fixed top-0 left-0 w-full z-50 ">
+        <Navbar />
+      </div>
       <HeroSection />
       <ProductGrid />
       <Footer />

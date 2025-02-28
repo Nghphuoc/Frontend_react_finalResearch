@@ -11,11 +11,10 @@ const api = axios.create({
 });
 
 
-
 // Add a request interceptor to include JWT and CSRF tokens
 api.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("Authorization");
+    const token = sessionStorage.getItem("Authorization");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
