@@ -38,7 +38,7 @@ if (!data || !data.productQuantities) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-[1000]">
       <div className="w-full max-w-lg mx-4 p-6 bg-white rounded-2xl shadow-xl border border-gray-300">
         {/* Close Button */}
         <div className="flex justify-end">

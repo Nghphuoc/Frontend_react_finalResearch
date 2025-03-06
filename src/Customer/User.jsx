@@ -61,14 +61,15 @@ const [dataOrder, setDataOrder] = useState([])
         onClose={() => setIsModalOpen(false)}
         style={{ zIndex: 100 }} // Đảm bảo nó nổi lên trên
       />
+
       <div className="flex flex-col lg:flex-row items-start justify-center min-h-screen bg-gray-100 p-4 lg:p-6 gap-4 lg:gap-6 mt-14">
         {/* Sidebar */}
         <div
-          // className={`fixed bottom-0 left-0 w-full bg-white shadow-lg rounded-2xl p-6 transition-transform duration-300 transform ${
-          //   isSidebarOpen ? "translate-x-0 z-10" : "-translate-x-full"
-          // } lg:relative lg:translate-x-0 lg:block lg:w-1/3 w-1/4 sm:w-1/3`}
-          // style={{ zIndex: isModalOpen ? 1 : 50 }}
-          className={` bg-white shadow-lg rounded-2xl p-5 w-1/3`}
+          className={`fixed top-0 left-0 w-full bg-white shadow-lg rounded-2xl p-6 transition-transform duration-300 transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:relative lg:translate-x-0 lg:block lg:w-1/3 w-1/4 sm:w-1/3 h-full lg:min-h-screen`}
+          style={{ zIndex: isModalOpen ? 1 : 50 }}
+          // className={` bg-white shadow-lg rounded-2xl p-5 w-1/3`}
         >
           <button
             className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full z-10 lg:hidden"
@@ -78,7 +79,7 @@ const [dataOrder, setDataOrder] = useState([])
           </button>
 
           <button className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <IoSettingsOutline className="text-xl"/>
+            <IoSettingsOutline className="text-xl" />
             Setting
           </button>
 

@@ -14,6 +14,7 @@ import ProductPage from "./Product/newDetail";
 
 import OrderSummary from "./Order/orderSummary";
 import PrivateRoute from "./CheckUserRequest/PrivateRouter";
+import ForgotPasswordPopup from "./Auth/ForgotPassword";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/admin/orderPage" element={<CheckOrderPage />}></Route>
           <Route path="/detail" element={<ProductPage />}></Route>
           <Route path="/order" element={<OrderSummary />}></Route>
+          <Route path="/11" element={<ForgotPasswordPopup />}></Route>
         </Routes>
       </BrowserRouter>
     </>

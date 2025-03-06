@@ -3,12 +3,16 @@ import React, { useEffect, useState } from "react";
 import SummaryRow from "./CartSumary";
 import NavBar from "../Nav/Navbar";
 import Footer from "../Foot/Footer";
-import { getCartId, order } from "./CartService";
+import {
+  checkStatusPayment,
+  getCartId,
+  getPayment,
+  order,
+} from "./CartService";
 import { useNavigate } from "react-router-dom";
 import "./scroll.css";
 import { deleteProductDetail } from "./CartService";
 import toast, { Toaster } from "react-hot-toast";
-
 
 const Cart = () => {
   const shipping = 3.33;
@@ -18,9 +22,47 @@ const Cart = () => {
   const userId = sessionStorage.getItem("userId");
   const [typeBanking, setTypeBanking] = useState("");
   const cartId = sessionStorage.getItem("cartId");
-  const [note, setNote] = useState('')
+  const [note, setNote] = useState("");
   useEffect(() => {
+    
     requestDataCart();
+
+    if (sessionStorage.getItem("paymentPending")) {
+      sessionStorage.removeItem("paymentPending"); // Xóa cờ
+
+      const params = new URLSearchParams(window.location.search);
+      console.log("param:" + params);
+      const paymentData = {
+        amount: params.get("vnp_Amount"),
+        bankCode: params.get("vnp_BankCode"),
+        orderInfo: params.get("vnp_OrderInfo"),
+        responseCode: params.get("vnp_ResponseCode"),
+      };
+    
+
+    if (paymentData.responseCode === "00") {
+      // // 🔹 Lấy lại dữ liệu từ sessionStorage
+      const savedSelectedItems = JSON.parse(sessionStorage.getItem("selectedItems")) || [];
+      const savedTypeBanking = sessionStorage.getItem("typeBanking") || "";
+      const savedNote = sessionStorage.getItem("note") || "";
+      const savedTotalItems = sessionStorage.getItem("totalItems") || 0;
+      // //setTotalPrice(savedTotalItems);
+      // setSelectedItems(savedSelectedItems);
+      // setTypeBanking(savedTypeBanking);
+      // setNote(savedNote);
+
+      // console.log("totalItems", savedTotalItems);
+      // console.log("selectedItems", savedSelectedItems);
+      // console.log("typeBanking", savedTypeBanking);
+      // console.log("note", savedNote);
+
+      // 🔹 Gửi đơn hàng sau khi lấy lại dữ liệu
+      sendOrderToBackend();
+
+    }
+
+  }
+
   }, []);
 
   const requestDataCart = async () => {
@@ -32,6 +74,7 @@ const Cart = () => {
     );
   };
 
+  // get id to product add order
   const handleCheckboxChange = (productId) => {
     setSelectedItems((prevSelected) =>
       prevSelected.includes(productId)
@@ -56,42 +99,63 @@ const Cart = () => {
 
   console.log(dynamicProductQuantities); // data seen to backend productId and quantity
 
-  const total = calculateTotal(cartData, selectedItems);
-  let totalItems = total + shipping;
-
+  let total = calculateTotal(cartData, selectedItems) ;
+  let totalItems = total+shipping;
   if (totalItems === 3.33) {
     totalItems = 0;
   }
 
   //
   const sendOrderToBackend = async () => {
-    if (!typeBanking || typeBanking === "0") {
-      toast.error("Please select a payment method.");
-      return;
-    }
+    
+    const savedSelectedItems =
+      JSON.parse(sessionStorage.getItem("selectedItems"))?.map(Number) || [];
 
-    //const userId = localStorage.getItem("userId") ;
+    const savedTypeBanking = sessionStorage.getItem("typeBanking") || "";
+    const savedNote = sessionStorage.getItem("note") || "";
+    const savedTotalItems = sessionStorage.getItem("totalItems") || 0;
 
-    const dynamicProductQuantities = cartData
-      .filter((product) => selectedItems.includes(product.productId))
+    const cartDataString = sessionStorage.getItem("cartData");
+    const savedCartData = cartDataString ? JSON.parse(cartDataString) : [];
+    console.log("Parsed cartData:", savedCartData);
+
+    console.log("totalItems", savedTotalItems);
+    console.log("selectedItems", savedSelectedItems);
+    console.log("typeBanking", savedTypeBanking);
+    console.log("note", savedNote);
+
+    console.log("cartData before filtering:", savedCartData);
+    console.log("savedSelectedItems:", savedSelectedItems);
+
+
+    const dynamicProductQuantities = savedCartData
+      .filter((product) => savedSelectedItems.includes(product.productId))
       .map((product) => ({
         productId: product.productId,
         quantity: product.quantity,
       }));
 
-    const total = calculateTotal(cartData, selectedItems);
+    console.log("Filtered Products:", dynamicProductQuantities);
+
+
+    const total = calculateTotal(savedCartData, savedSelectedItems);
     let totalItems = total + shipping;
     if (totalItems === 3.33) {
       totalItems = 0;
+    }
+
+    if (!savedTypeBanking || savedTypeBanking === "0") {
+      toast.error("Please select a payment method.");
+      return;
     }
 
     const orderData = {
       status: "Ordered",
       orderName: "Test Order",
       order_date: new Date().toISOString(),
-      note: note,
-      statusBanking: typeBanking,
-      totalPrice: totalItems,
+      note: savedNote,
+      statusBanking: savedTypeBanking,
+      totalPrice: savedTotalItems,
       user: {
         userId: userId,
       },
@@ -99,36 +163,60 @@ const Cart = () => {
     };
 
     console.log("Sending order data:", orderData);
-
+    ////// here
     try {
-      if(totalItems===0){
-        toast.error("please select a product");
-        return;
-      }
+      // if (total === 0) {
+      //   toast.error("please select a product");
+      //   return;
+      // }
       const response = await order(orderData);
       console.log("Response from backend:", response.data);
-      deleteProduct(selectedItems);
+      deleteProduct(savedSelectedItems);
     } catch (error) {
       console.error("Error sending order:", error);
     }
+
+    // 🔹 Xóa dữ liệu đã lưu
+    sessionStorage.removeItem("selectedItems");
+    sessionStorage.removeItem("typeBanking");
+    sessionStorage.removeItem("note");
+    sessionStorage.removeItem("totalItems");
+    sessionStorage.removeItem("cartData");
+    
+    requestDataCart();
   };
 
-async function deleteProduct(productId) {
-  const removeCartResponse = await deleteProductDetail(cartId, productId);
-  if (removeCartResponse.data) {
-    toast.success("Product removed from cart");
-    requestDataCart(); // Gọi lại để cập nhật danh sách sản phẩm
-    console.log(removeCartResponse);
-  } else {
-    toast.error("Error removing product from cart");
+  async function deleteProduct(productId) {
+    const removeCartResponse = await deleteProductDetail(cartId, productId);
+    if (removeCartResponse.data) {
+      toast.success("Product removed from cart");
+      requestDataCart(); // Gọi lại để cập nhật danh sách sản phẩm
+      console.log(removeCartResponse);
+    } else {
+      toast.error("Error removing product from cart");
+    }
   }
-}
+
+  async function paymentCall(amount) {
+    const paymentResponse = await getPayment(amount);
+    // 🔹 Lưu dữ liệu vào sessionStorage
+    sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+    sessionStorage.setItem("typeBanking", typeBanking);
+    sessionStorage.setItem("note", note);
+    sessionStorage.setItem("totalItems", totalItems);
+    sessionStorage.setItem("cartData", JSON.stringify(cartData));
+
+    // Chuyển hướng đến trang thanh toán
+
+    sessionStorage.setItem("paymentPending", "true");
+    window.location.href = paymentResponse.data.url;
+  }
 
   return (
     <>
       <NavBar />
       <Toaster />
-      <div className="bg-white flex justify-center items-start min-h-screen px-4 sm:px-8 md:px-12 lg:px-24 py-8 mt-14">
+      <div className="bg-white flex justify-center items-start min-h-screen px-4 sm:px-8 md:px-12 lg:px-24 py-8 ">
         <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
           {/* Cart Items Column with scrollable feature */}
           <div className="w-full lg:w-2/3 flex flex-col gap-6 overflow-y-auto max-h-screen pr-4 scrollbar-hide">
@@ -196,7 +284,7 @@ async function deleteProduct(productId) {
 
             <button
               className=" w-full bg-green-500 text-white py-3 rounded-lg text-lg font-semibold"
-              onClick={sendOrderToBackend}
+              onClick={(e) => paymentCall(totalItems)}
             >
               Checkout
             </button>

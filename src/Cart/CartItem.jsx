@@ -33,7 +33,6 @@ const CartItem = ({ item, requestDataCart, isChecked, onCheckboxChange }) => {
   async function removeProduct(productId) {
     const removeCartResponse = await removeItemOnCart(cartId, productId);
     if (removeCartResponse.data) {
-      toast.success("Product removed from cart");
       requestDataCart(); // Gọi lại để cập nhật danh sách sản phẩm
       console.log(removeCartResponse);
     } else {
