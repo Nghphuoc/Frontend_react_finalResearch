@@ -35,6 +35,63 @@ function ChatBot() {
     navigate(`/detail/${id}`);
   };
 
+  // const handleSendMessage = useCallback(async () => {
+  //   if (!input.trim() || isLoading) return;
+
+  //   const userMessage = { sender: "user", type: "text", text: input };
+  //   setMessages((prev) => [...prev, userMessage]);
+  //   setInput("");
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await fetch(API_URL, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ sender: "user", message: input }),
+  //     });
+
+  //     const data = await response.json();
+  //     if (!response.ok) throw new Error("API request failed");
+
+  //     if (data.length > 0) {
+  //       const message = data[0];
+  //       let content;
+
+  //       try {
+  //         content = JSON.parse(message.text);
+  //       } catch {
+  //         content = message.text;
+  //       }
+
+  //       const botMessage = Array.isArray(content)
+  //         ? {
+  //             sender: "bot",
+  //             type: "products",
+  //             products: content.slice(0, 3),
+  //           }
+  //         : {
+  //             sender: "bot",
+  //             type: "text",
+  //             text: content,
+  //           };
+
+  //       setMessages((prev) => [...prev, botMessage]);
+  //     }
+  //   } catch (error) {
+  //     console.error("API Error:", error);
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       {
+  //         sender: "bot",
+  //         type: "text",
+  //         text: "⚠️ Lỗi kết nối với chatbot, vui lòng thử lại!",
+  //       },
+  //     ]);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [input, isLoading]);
+
   const handleSendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 
@@ -63,17 +120,32 @@ function ChatBot() {
           content = message.text;
         }
 
-        const botMessage = Array.isArray(content)
-          ? {
+        let botMessage;
+
+        if (Array.isArray(content)) {
+          if (content.length > 0 && "productId" in content[0]) {
+            // Nếu là danh sách sản phẩm
+            botMessage = {
               sender: "bot",
               type: "products",
               products: content.slice(0, 3),
-            }
-          : {
-              sender: "bot",
-              type: "text",
-              text: content,
             };
+          } else if (content.length > 0 && "orderId" in content[0]) {
+            // Nếu là danh sách đơn hàng
+            botMessage = {
+              sender: "bot",
+              type: "orders",
+              orders: content,
+            };
+          }
+        } else {
+          // Nếu chỉ là tin nhắn văn bản
+          botMessage = {
+            sender: "bot",
+            type: "text",
+            text: content,
+          };
+        }
 
         setMessages((prev) => [...prev, botMessage]);
       }
@@ -91,6 +163,8 @@ function ChatBot() {
       setIsLoading(false);
     }
   }, [input, isLoading]);
+
+
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -122,7 +196,7 @@ function ChatBot() {
           </div>
 
           {/* Messages Container */}
-          <div className="p-4 text-gray-800 h-96 overflow-y-auto flex flex-col">
+          {/* <div className="p-4 text-gray-800 h-96 overflow-y-auto flex flex-col">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -161,6 +235,128 @@ function ChatBot() {
                               className="w-12 h-12 rounded-md cursor-pointer object-cover"
                               onClick={() => productDetail(product.productId)}
                             />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {msg.type === "order"&& (
+// check type order 
+                  <div> 
+                    <h1>Đơn hàng của bạn đã được đặt thành công</h1>
+                    <p>Đơn hàng của bạn sẽ được giao trong vòng 3-5 ngày tới</p>
+                  </div>
+
+                  )}
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div> */}
+
+          {/* Messages Container */}
+          <div className="p-4 text-gray-800 h-96 overflow-y-auto flex flex-col">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`mb-3 flex ${
+                  msg.sender === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`max-w-[85%] rounded-lg p-3 ${
+                    msg.sender === "user"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {/* Tin nhắn văn bản */}
+                  {msg.type === "text" && msg.text}
+
+                  {/* Hiển thị danh sách sản phẩm */}
+                  {msg.type === "products" && (
+                    <div className="space-y-2">
+                      {msg.products.map((product) => (
+                        <div
+                          key={product.productId}
+                          className="border rounded-lg p-2 bg-white"
+                        >
+                          <h3 className="font-semibold">
+                            📦 {product.productName}
+                          </h3>
+                          <p className="text-sm line-clamp-2">
+                            {product.description}
+                          </p>
+                          <div className="flex justify-between items-center mt-2">
+                            <span className="text-green-600 font-bold">
+                              {new Intl.NumberFormat().format(product.price)} $
+                            </span>
+                            <img
+                              src={product.imageUrl}
+                              alt={product.productName}
+                              className="w-12 h-12 rounded-md cursor-pointer object-cover"
+                              onClick={() => productDetail(product.productId)}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Hiển thị đơn hàng */}
+                  {msg.type === "orders" && (
+                    <div className="space-y-3">
+                      {msg.orders.map((order) => (
+                        <div
+                          key={order.orderId}
+                          className="border rounded-lg p-3 bg-white"
+                        >
+                          <h3 className="font-semibold text-blue-600">
+                            📦 Đơn hàng #{order.orderId} - {order.status}
+                          </h3>
+                          <p className="text-sm">
+                            <strong>Ngày đặt:</strong>{" "}
+                            {new Date(order.order_date).toLocaleDateString()}
+                          </p>
+                          <p className="text-sm">
+                            <strong>Phương thức thanh toán:</strong>{" "}
+                            {order.statusBanking}
+                          </p>
+                          <p className="text-sm">
+                            <strong>Ghi chú:</strong>{" "}
+                            {order.note || "Không có ghi chú"}
+                          </p>
+
+                          <div className="mt-2">
+                            <h4 className="font-semibold">
+                              Sản phẩm trong đơn:
+                            </h4>
+                            <ul className="space-y-2">
+                              {order.productQuantities.map((product) => (
+                                <li
+                                  key={product.productId}
+                                  className="flex items-center space-x-3"
+                                >
+                                  <img
+                                    src={product.imageUrl}
+                                    alt={product.productName}
+                                    className="w-12 h-12 rounded-md object-cover"
+                                  />
+                                  <div>
+                                    <p className="font-medium">
+                                      {product.productName}
+                                    </p>
+                                    <p className="text-sm">
+                                      {product.quantity} x{" "}
+                                      {new Intl.NumberFormat().format(
+                                        product.price
+                                      )}{" "}
+                                      $
+                                    </p>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
                         </div>
                       ))}
