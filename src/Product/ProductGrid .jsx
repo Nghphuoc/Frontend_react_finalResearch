@@ -11,6 +11,7 @@ const ProductGrid = () => {
     getAllProduct()
       .then((response) => {
         setAllProduct(response.data); // Lưu danh sách sản phẩm
+        console.log(allProduct);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);

@@ -28,14 +28,30 @@ const ProductCard = ({ product }) => {
 
   return (
     <>
-    <Toaster/>
+      <Toaster />
       <div
-        className="bg-white shadow-lg rounded-lg p-4 text-center transform transition hover:scale-105" //hover:scale-105 when you hover on the card will big more nomarl (transform transition)
+        className="bg-white shadow-lg rounded-lg p-4 items-center text-center transform transition hover:scale-105 " //hover:scale-105 when you hover on the card will big more nomarl (transform transition)
       >
+        {/* <div className="absolute top-2 right-2">
+          <span className="font-semibold text-white text-xs bg-red-500 px-2 py-1 rounded">
+            sold: {product.number_Of_Purchases}
+          </span>
+        </div> */}
+
+        {/* Nhãn giảm giá */}
+        <div className="absolute top-0 left-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
+          Giảm 11%
+        </div>
+
+        {/* Số lượt yêu thích */}
+        {/* <div className="absolute top-0 right-0 bg-pink-300 text-white text-xs font-bold px-2 py-1 rounded-bl-lg flex items-center space-x-1">
+          <span>8</span> ❤️ <span>3</span>
+        </div> */}
+
         <img
           src={product.imageUrl}
           alt={product.productName}
-          className="mx-auto mb-4 rounded-lg"
+          className=" h-44 object-cover mx-auto mb-4 rounded-lg "
           onClick={() => handleClickMoreInfo(product.productId)}
         />
         <h4 className="font-bold text-left text-sm">{product.productName}</h4>
@@ -44,13 +60,16 @@ const ProductCard = ({ product }) => {
             <i key={i} className="fas fa-star"></i>
           ))}
         </div>
-        <p className="text-red-500 font-semibold mb-4"> ${product.price}</p>
-        <button
+        <p className="text-red-500 font-semibold text-center  mb-4">
+          {" "}
+          ${product.price}
+        </p>
+        {/* <button
           className=" bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition"
           onClick={() => handleClickAddToCart(product.productId)}
         >
           Add to cart
-        </button>
+        </button> */}
       </div>
     </>
   );

@@ -14,13 +14,15 @@ import { vi } from "date-fns/locale";
 import OrderDetails from "../Order/OrderDetail";
 import { getOrderDetail } from "./UserService";
 import { IoSettingsOutline } from "react-icons/io5";
+import InfoUserUpdate from "./FormUpdateInfoUser";
+
 const UserDetails = () => {
   const [user, setUser] = useState({});
   const [orderList, setOrderList] = useState([]);
   const userId = sessionStorage.getItem("userId");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-const [dataOrder, setDataOrder] = useState([])
-
+  const [dataOrder, setDataOrder] = useState([])
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await getUserInfo(userId);
@@ -51,6 +53,18 @@ const [dataOrder, setDataOrder] = useState([])
     setIsModalOpen(true);
   };
 
+  function handleOpenUpdateUser() {
+    setIsOpen(true);
+  }
+
+   function handleClickLogout() {
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("Authorization");
+    sessionStorage.removeItem("cartId");
+    navigate("/home");
+  }
+
   return (
     <>
       <NavBar />
@@ -62,6 +76,7 @@ const [dataOrder, setDataOrder] = useState([])
         style={{ zIndex: 100 }} // Đảm bảo nó nổi lên trên
       />
 
+      <InfoUserUpdate isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <div className="flex flex-col lg:flex-row items-start justify-center min-h-screen bg-gray-100 p-4 lg:p-6 gap-4 lg:gap-6 mt-14">
         {/* Sidebar */}
         <div
@@ -78,7 +93,10 @@ const [dataOrder, setDataOrder] = useState([])
             <FaBars />
           </button>
 
-          <button className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+          <button
+            className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1"
+            onClick={handleOpenUpdateUser}
+          >
             <IoSettingsOutline className="text-xl" />
             Setting
           </button>
@@ -106,6 +124,12 @@ const [dataOrder, setDataOrder] = useState([])
                 </div>
               </div>
             ))}
+            <button
+              className="text-2x bg-indigo-500 rounded-lg hover:bg-indigo-600 py-2 px-3 text-white"
+              onClick={handleClickLogout}
+            >
+              Logout
+            </button>
           </div>
         </div>
 
