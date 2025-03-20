@@ -26,6 +26,8 @@ function ChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const userName = sessionStorage.getItem("userName");
+
   useEffect(() => {
     sessionStorage.setItem("chatHistory", JSON.stringify(messages));
     scrollToBottom();
@@ -35,62 +37,21 @@ function ChatBot() {
     navigate(`/detail/${id}`);
   };
 
-  // const handleSendMessage = useCallback(async () => {
-  //   if (!input.trim() || isLoading) return;
+  // function check input user 
+  function processUserInput(inputText) {
+    const keywords = ["order", "đơn hàng", "kiểm tra đơn", "đơn hàng của tôi"];
+    const additionalText = " "+ userName; // Biến set sẵn
 
-  //   const userMessage = { sender: "user", type: "text", text: input };
-  //   setMessages((prev) => [...prev, userMessage]);
-  //   setInput("");
-  //   setIsLoading(true);
+    const containsKeyword = keywords.some((keyword) =>
+      inputText.toLowerCase().includes(keyword.toLowerCase())
+    );
 
-  //   try {
-  //     const response = await fetch(API_URL, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ sender: "user", message: input }),
-  //     });
+    if (containsKeyword) {
+      return inputText + additionalText;
+    }
 
-  //     const data = await response.json();
-  //     if (!response.ok) throw new Error("API request failed");
-
-  //     if (data.length > 0) {
-  //       const message = data[0];
-  //       let content;
-
-  //       try {
-  //         content = JSON.parse(message.text);
-  //       } catch {
-  //         content = message.text;
-  //       }
-
-  //       const botMessage = Array.isArray(content)
-  //         ? {
-  //             sender: "bot",
-  //             type: "products",
-  //             products: content.slice(0, 3),
-  //           }
-  //         : {
-  //             sender: "bot",
-  //             type: "text",
-  //             text: content,
-  //           };
-
-  //       setMessages((prev) => [...prev, botMessage]);
-  //     }
-  //   } catch (error) {
-  //     console.error("API Error:", error);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         sender: "bot",
-  //         type: "text",
-  //         text: "⚠️ Lỗi kết nối với chatbot, vui lòng thử lại!",
-  //       },
-  //     ]);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, [input, isLoading]);
+    return inputText;
+  }
 
   const handleSendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
@@ -99,12 +60,12 @@ function ChatBot() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-
+    console.log("first", processUserInput(input));
     try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sender: "user", message: input }),
+        body: JSON.stringify({ sender: "user", message: processUserInput(input) }),
       });
 
       const data = await response.json();
@@ -164,8 +125,6 @@ function ChatBot() {
     }
   }, [input, isLoading]);
 
-
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -194,66 +153,6 @@ function ChatBot() {
               <FaTimes size={18} />
             </button>
           </div>
-
-          {/* Messages Container */}
-          {/* <div className="p-4 text-gray-800 h-96 overflow-y-auto flex flex-col">
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`mb-3 flex ${
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-lg p-3 ${
-                    msg.sender === "user"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {msg.type === "text" && msg.text}
-                  {msg.type === "products" && (
-                    <div className="space-y-2">
-                      {msg.products.map((product) => (
-                        <div
-                          key={product.productId}
-                          className="border rounded-lg p-2 bg-white"
-                        >
-                          <h3 className="font-semibold">
-                            📦 {product.productName}
-                          </h3>
-                          <p className="text-sm line-clamp-2">
-                            {product.description}
-                          </p>
-                          <div className="flex justify-between items-center mt-2">
-                            <span className="text-green-600 font-bold">
-                              {new Intl.NumberFormat().format(product.price)} $
-                            </span>
-                            <img
-                              src={product.imageUrl}
-                              alt={product.productName}
-                              className="w-12 h-12 rounded-md cursor-pointer object-cover"
-                              onClick={() => productDetail(product.productId)}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {msg.type === "order"&& (
-// check type order 
-                  <div> 
-                    <h1>Đơn hàng của bạn đã được đặt thành công</h1>
-                    <p>Đơn hàng của bạn sẽ được giao trong vòng 3-5 ngày tới</p>
-                  </div>
-
-                  )}
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div> */}
-
           {/* Messages Container */}
           <div className="p-4 text-gray-800 h-96 overflow-y-auto flex flex-col">
             {messages.map((msg, idx) => (

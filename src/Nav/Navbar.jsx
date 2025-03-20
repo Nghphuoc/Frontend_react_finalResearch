@@ -46,10 +46,10 @@ function NavBar() {
         <a href="/cart" className="text-gray-600 hover:text-black">
           Collections
         </a>
-        <a href="/uploadimg" className="text-gray-600 hover:text-black">
+        <a href="/#" className="text-gray-600 hover:text-black">
           Watches
         </a>
-        <a href="/detail" className="text-gray-600 hover:text-black">
+        <a href="/#" className="text-gray-600 hover:text-black">
           Quick find
         </a>
         <a
@@ -64,21 +64,7 @@ function NavBar() {
       {/* Search Bar + Icons */}
       <div className="flex items-center space-x-4 ">
         {/* Search Input */}
-        <form className="relative hidden md:flex " onSubmit={handleSearch}>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-4 py-2 border rounded-full focus:outline-none focus:ring focus:border-green-500 w-56"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="absolute right-3 top-2 text-gray-500"
-          >
-            <FaSearch />
-          </button>
-        </form>
+        
 
         {/* User & Cart Icons */}
         <button
@@ -146,3 +132,6 @@ function NavBar() {
 }
 
 export default NavBar;
+
+
+

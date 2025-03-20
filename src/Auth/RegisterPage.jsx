@@ -98,16 +98,23 @@ const SignUpLogInForm = () => {
       const Authorization = sessionStorage.getItem("Authorization");
       console.log(Authorization)
 
-      const responseUser = await getInfoUser(loginRequest);
-      console.log("data user", responseUser);
-      sessionStorage.setItem("userId", responseUser.data.userId);
-      sessionStorage.setItem("userName", responseUser.data.fullName);
-      sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
+      // const responseUser = await getInfoUser(loginRequest);
+      // console.log("data user", responseUser);
+      // sessionStorage.setItem("userId", responseUser.data.userId);
+      // sessionStorage.setItem("userName", responseUser.data.fullName);
+      // sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
       toast.success("login successfully!!!");
 
       if (role === "ROLE_ADMIN") {
-        navigate("/");
+        navigate("/admin/orderPage");
       } else {
+        const responseUser = await getInfoUser(loginRequest);
+        console.log("data user", responseUser);
+        sessionStorage.setItem("userId", responseUser.data.userId);
+        sessionStorage.setItem("userName", responseUser.data.fullName);
+        sessionStorage.setItem("address", responseUser.data.address);
+        sessionStorage.setItem("phone", responseUser.data.phone);
+        sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
         navigate("/userDetail");
       }
 

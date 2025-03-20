@@ -64,12 +64,7 @@ const ProductCard = ({ product }) => {
           {" "}
           ${product.price}
         </p>
-        {/* <button
-          className=" bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition"
-          onClick={() => handleClickAddToCart(product.productId)}
-        >
-          Add to cart
-        </button> */}
+       
       </div>
     </>
   );
