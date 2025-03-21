@@ -115,6 +115,7 @@ const SignUpLogInForm = () => {
         sessionStorage.setItem("address", responseUser.data.address);
         sessionStorage.setItem("phone", responseUser.data.phone);
         sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
+        
         navigate("/userDetail");
       }
 

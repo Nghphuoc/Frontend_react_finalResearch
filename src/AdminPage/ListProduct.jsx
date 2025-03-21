@@ -22,6 +22,7 @@ import { getAllProduct } from "../Product/service";
 import { Toaster, toast } from "react-hot-toast";
 import NavBarAdmin from "./NavBarAdmin";
 import { useNavigate } from "react-router-dom";
+import { deleteProduct } from "./adminService";
 
 const ListProduct = () => {
   const navigate = useNavigate();
@@ -152,10 +153,15 @@ const ListProduct = () => {
     }
   };
 
-  const handleDeleteClick = (product) => {
-    setProductToDelete(product);
-    setIsDeleteModalOpen(true);
-  };
+   const handleDeleteClick = async (product) => {
+    //  setProductToDelete(product);
+    //  setIsDeleteModalOpen(true);
+     const response = await deleteProduct(product);
+     if (response.status === 200) {
+       toast.success("Delete product successfully");
+       getProducts();
+     }
+   };
 
   const confirmDelete = async () => {
     if (!productToDelete) return;
@@ -193,6 +199,14 @@ const ListProduct = () => {
   const handleViewProduct = (productId) => {
     navigate(`/products/${productId}`);
   };
+
+
+  async function deleteProductHandle(id){
+    const response = await deleteProduct(id);
+    if (response.status === 200) {
+        toast.success("Delete product successfully");
+    }
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -742,7 +756,7 @@ const ListProduct = () => {
                                 <FaEdit size={16} />
                               </button>
                               <button
-                                onClick={() => handleDeleteClick(product)}
+                                onClick={() => handleDeleteClick(product.productId)}
                                 className="p-1.5 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors duration-200"
                                 title="Delete product"
                               >

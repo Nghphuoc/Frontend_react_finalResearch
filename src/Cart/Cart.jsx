@@ -22,6 +22,7 @@ import {
   FaUniversity,
 } from "react-icons/fa";
 import { BsCheckCircleFill, BsExclamationCircleFill } from "react-icons/bs";
+import ChatBot from "../ChatBot/Chat";
 
 const Cart = () => {
   const SHIPPING_FEE = 3.33;
@@ -182,10 +183,10 @@ console.log(userAddress)
     const total = calculateTotal(cartData, selectedItems);
     const totalItems = total > 0 ? total + SHIPPING_FEE : 0;
 
-    if(userAddress === null || userPhone === null){
-      toast.error("Please update your address and phone number in your profile") 
-      return;
-    }
+    // if(userAddress === null || userPhone === null){
+    //   toast.error("Please update your address and phone number in your profile") 
+    //   return;
+    // }
 
     if (total === 0 ) {
       toast.error("Please select at least one product to checkout", {
@@ -268,7 +269,7 @@ console.log(userAddress)
         onClose={() => setOpenPopup(false)}
         order={orderDataToPopup}
       />
-
+<ChatBot/>
       <div className="bg-gray-50 min-h-screen px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">

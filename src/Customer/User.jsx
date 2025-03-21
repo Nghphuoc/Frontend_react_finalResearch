@@ -27,6 +27,7 @@ import NavBar from "../Nav/Navbar";
 import OrderDetails from "../Order/OrderDetail";
 import { getUserInfo, getOrderDetail, updateUserProfile } from "./UserService";
 import "../Cart/scroll.css";
+import ChatBot from "../ChatBot/Chat";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -382,6 +383,8 @@ const UserDetails = () => {
         onClose={() => setIsModalOpen(false)}
         style={{ zIndex: 100 }}
       />
+
+      <ChatBot/>
 
       <div className="flex flex-col lg:flex-row items-start justify-center min-h-screen bg-gray-50 p-4 lg:p-6 gap-4 lg:gap-6 mt-14">
         {/* User Profile Sidebar */}

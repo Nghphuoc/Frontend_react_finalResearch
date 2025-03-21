@@ -31,12 +31,12 @@ const HeroSection = () => {
 
       {/* Buttons */}
       <div className="flex flex-wrap justify-center space-x-4 mt-6">
-        <button className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition">
+        {/* <button className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition">
           Purchase Now
         </button>
         <button className="border border-gray-400 text-gray-600 px-6 py-3 rounded-full flex items-center hover:bg-gray-100 transition">
           <i className="fa fa-play-circle mr-2"></i> Watch Video
-        </button>
+        </button> */}
       </div>
     </section>
   );
