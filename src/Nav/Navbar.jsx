@@ -108,23 +108,7 @@ function NavBar() {
           >
             Pages
           </a>
-          <form className="w-full mt-2" onSubmit={handleSearch}>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring focus:border-green-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-2 text-gray-500"
-              >
-                <FaSearch />
-              </button>
-            </div>
-          </form>
+          
         </div>
       )}
     </div>

@@ -24,6 +24,10 @@ import NavBarAdmin from "./NavBarAdmin";
 import { useNavigate } from "react-router-dom";
 import { deleteProduct } from "./adminService";
 
+// Import the ProductUpdateModal component
+import ProductUpdateModal from "./ProductUpdateForm";
+
+
 const ListProduct = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -44,8 +48,12 @@ const ListProduct = () => {
   const [productToDelete, setProductToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [lastUpdated] = useState("2025-03-20 06:55:02");
+  const [lastUpdated] = useState("2025-03-21 08:26:52");
   const [currentUser] = useState("NamProPlayer20");
+
+  // Add these new state variables for the update modal
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
@@ -58,6 +66,7 @@ const ListProduct = () => {
       setLoading(true);
       const response = await getAllProduct();
       setProducts(response.data);
+      console.log(response.data);
       toast.success("Products loaded successfully", { id: "products-loaded" });
     } catch (error) {
       console.error("Failed to load products:", error);
@@ -133,6 +142,8 @@ const ListProduct = () => {
     indexOfFirstItem,
     indexOfLastItem
   );
+  
+  console.log(currentItems);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -153,15 +164,18 @@ const ListProduct = () => {
     }
   };
 
-   const handleDeleteClick = async (product) => {
-    //  setProductToDelete(product);
-    //  setIsDeleteModalOpen(true);
-     const response = await deleteProduct(product);
-     if (response.status === 200) {
-       toast.success("Delete product successfully");
-       getProducts();
-     }
-   };
+  const handleDeleteClick = async (productId) => {
+    try {
+      const response = await deleteProduct(productId);
+      if (response.status === 200) {
+        toast.success("Product deleted successfully");
+        getProducts();
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product");
+    }
+  };
 
   const confirmDelete = async () => {
     if (!productToDelete) return;
@@ -192,21 +206,21 @@ const ListProduct = () => {
     navigate("/admin/products/add");
   };
 
+  // Update this function to open the modal instead of navigating
   const handleEditProduct = (productId) => {
-    navigate(`/admin/products/edit/${productId}`);
+    setSelectedProductId(productId);
+    setIsUpdateModalOpen(true);
+  };
+
+  // Function to handle product updates
+  const handleProductUpdated = () => {
+    // Refresh product list after update
+    getProducts();
   };
 
   const handleViewProduct = (productId) => {
     navigate(`/products/${productId}`);
   };
-
-
-  async function deleteProductHandle(id){
-    const response = await deleteProduct(id);
-    if (response.status === 200) {
-        toast.success("Delete product successfully");
-    }
-  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -756,7 +770,9 @@ const ListProduct = () => {
                                 <FaEdit size={16} />
                               </button>
                               <button
-                                onClick={() => handleDeleteClick(product.productId)}
+                                onClick={() =>
+                                  handleDeleteClick(product.productId)
+                                }
                                 className="p-1.5 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors duration-200"
                                 title="Delete product"
                               >
@@ -779,7 +795,7 @@ const ListProduct = () => {
                 </table>
               </div>
 
-              {/* Pagination Section - Better spacing and layout */}
+              {/* Pagination Section */}
               {!loading && filteredProducts.length > 0 && (
                 <div className="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -787,7 +803,7 @@ const ListProduct = () => {
                       <span className="whitespace-nowrap">
                         Showing {indexOfFirstItem + 1} to{" "}
                         {Math.min(indexOfLastItem, filteredProducts.length)} of{" "}
-                        {filteredProducts.length} products
+                        {products.length} products
                       </span>
                       <div className="ml-4 flex items-center space-x-2">
                         <span className="whitespace-nowrap">Show</span>
@@ -825,10 +841,10 @@ const ListProduct = () => {
                       {/* Page Numbers - Desktop */}
                       <div className="hidden md:flex">
                         {Array.from(
-                          { length: Math.min(5, totalPages) },
+                          { length: Math.min(10, totalPages) },
                           (_, i) => {
                             let pageNum;
-                            if (totalPages <= 5) {
+                            if (totalPages <= 10) {
                               pageNum = i + 1;
                             } else if (currentPage <= 3) {
                               pageNum = i + 1;
@@ -889,6 +905,14 @@ const ListProduct = () => {
             </div>
           </div>
         </main>
+
+        {/* Product Update Modal */}
+        <ProductUpdateModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          productId={selectedProductId}
+          onProductUpdated={handleProductUpdated}
+        />
       </div>
 
       {/* Delete Confirmation Modal */}

@@ -12,3 +12,5 @@ export const getProduct = (id) => axios.get(API+"/"+id)
 export const addProductToCart = (cartId, productId) => api.put("/cart/addProduct/"+cartId+"/" + productId)
 
 export const getAllCategory = () => api.get("/category")
+
+export const updateProduct = (id, product) => api.put("product"+"/"+id, product)

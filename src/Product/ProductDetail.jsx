@@ -21,6 +21,7 @@ import { getProduct, addProductToCart } from "./service";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../Nav/Navbar";
 import Footer from "../Foot/Footer";
+import ChatBot from "../ChatBot/Chat";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -136,6 +137,7 @@ const ProductDetail = () => {
   if (error || !product) {
     return (
       <>
+        
         <NavBar />
         <div className="min-h-[60vh] max-w-5xl mx-auto p-8 flex flex-col items-center justify-center">
           <div className="bg-red-50 p-6 rounded-lg text-center w-full max-w-md">
@@ -153,6 +155,7 @@ const ProductDetail = () => {
               <ArrowLeft size={16} className="inline mr-2" /> Go Back
             </button>
           </div>
+
         </div>
         <Footer />
       </>
@@ -181,7 +184,7 @@ const ProductDetail = () => {
     },
     {
       id: 3,
-      user: "Lê Hoàng Nam",
+      user: "Phan Thị Thu Hường",
       rating: 5,
       date: "2025-01-22",
       comment:
@@ -197,7 +200,7 @@ const ProductDetail = () => {
     <>
       <NavBar />
       <Toaster position="top-center" />
-
+      <ChatBot />
       {/* Breadcrumbs */}
       <div className="bg-gray-50 py-3">
         <div className="max-w-6xl mx-auto px-4">
@@ -207,10 +210,7 @@ const ProductDetail = () => {
               Home
             </a>
             <ChevronRight size={14} className="mx-2" />
-            <a
-              href="/"
-              className="hover:text-indigo-600 transition-colors"
-            >
+            <a href="/" className="hover:text-indigo-600 transition-colors">
               Products
             </a>
             <ChevronRight size={14} className="mx-2" />

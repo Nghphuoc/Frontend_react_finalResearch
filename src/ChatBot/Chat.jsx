@@ -41,7 +41,6 @@ function ChatBot() {
   function processUserInput(inputText) {
     const keywords = ["order", "đơn hàng", "kiểm tra đơn", "đơn hàng của tôi"];
     const additionalText = " "+ userName; // Biến set sẵn
-
     const containsKeyword = keywords.some((keyword) =>
       inputText.toLowerCase().includes(keyword.toLowerCase())
     );

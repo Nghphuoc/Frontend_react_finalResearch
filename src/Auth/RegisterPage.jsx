@@ -33,8 +33,8 @@ const SignUpLogInForm = () => {
       email: email,
       password: password,
       username: name,
-      phone: "09087133661",
-      address: "50 Ly thuong kiet, Q1, HCM",
+      phone: "",
+      address: "",
     };
 
     if (!email || !password || !confirmPassword || !phone) {
@@ -89,7 +89,6 @@ const SignUpLogInForm = () => {
           },
         }
       );
-
       sessionStorage.setItem("Authorization", response.data.jwtToken);
       sessionStorage.setItem("role", response.data.roles);
       let role = sessionStorage.getItem("role");
@@ -104,7 +103,7 @@ const SignUpLogInForm = () => {
       // sessionStorage.setItem("userName", responseUser.data.fullName);
       // sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
       toast.success("login successfully!!!");
-
+      
       if (role === "ROLE_ADMIN") {
         navigate("/admin/orderPage");
       } else {
@@ -115,7 +114,6 @@ const SignUpLogInForm = () => {
         sessionStorage.setItem("address", responseUser.data.address);
         sessionStorage.setItem("phone", responseUser.data.phone);
         sessionStorage.setItem("cartId", responseUser.data.cart.cartId);
-        
         navigate("/userDetail");
       }
 
@@ -141,7 +139,6 @@ const SignUpLogInForm = () => {
         <ForgotPasswordPopup
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          
         />
         <div className=" flex justify-center items-center min-h-screen">
           <div className={`container ${isActive ? "active" : ""} `}>
@@ -231,7 +228,13 @@ const SignUpLogInForm = () => {
                     placeholder="Password"
                     onChange={(e) => setPassword1(e.target.value)}
                   />
+                  {password.length > 0 && password.length < 6 && (
+                    <p className="text-red-500 text-sm">
+                      Password must be at least 6 characters.
+                    </p>
+                  )}
                 </div>
+
                 <div className="input-box">
                   <input
                     value={confirmPassword}
@@ -239,6 +242,11 @@ const SignUpLogInForm = () => {
                     placeholder="confirm Password"
                     onChange={(e) => setPassword2(e.target.value)}
                   />
+                  {confirmPassword.length > 0 && confirmPassword.length < 6 && (
+                    <p className="text-red-500 text-sm">
+                      Password must be at least 6 characters.
+                    </p>
+                  )}
                 </div>
                 <button
                   className="btn hover:bg-indigo-500 "
