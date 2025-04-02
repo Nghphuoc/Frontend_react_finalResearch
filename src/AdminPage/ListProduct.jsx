@@ -22,7 +22,7 @@ import { getAllProduct } from "../Product/service";
 import { Toaster, toast } from "react-hot-toast";
 import NavBarAdmin from "./NavBarAdmin";
 import { useNavigate } from "react-router-dom";
-import { deleteProduct } from "./adminService";
+import { deleteProduct, UpdateProductSale } from "./adminService";
 
 // Import the ProductUpdateModal component
 import ProductUpdateModal from "./ProductUpdateForm";
@@ -54,6 +54,7 @@ const ListProduct = () => {
   // Add these new state variables for the update modal
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [dataCheckSale, setDataCheckSale] = useState([]);
 
   const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
@@ -222,6 +223,24 @@ const ListProduct = () => {
     navigate(`/products/${productId}`);
   };
 
+  const handleCheckboxChange = (productId) => {
+    setDataCheckSale(
+      (prevSelected) =>
+        prevSelected.includes(productId)
+          ? prevSelected.filter((id) => id !== productId) // Bỏ chọn
+          : [...prevSelected, productId] // Chọn thêm
+    );
+  };
+
+    console.log(dataCheckSale);
+
+    function handleSubmitSale(){
+      UpdateProductSale(dataCheckSale);
+      toast.success("success ", "Sale updated successfully");
+      setDataCheckSale([]);
+      getProducts();
+    }
+  
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <SideBar collapsed={sidebarCollapsed} />
@@ -470,7 +489,7 @@ const ListProduct = () => {
 
                     {/* Add Product Button */}
                     <button
-                      onClick={handleAddProduct}
+                      onClick={handleSubmitSale}
                       className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-2 transition-colors duration-200"
                     >
                       <FaPlus size={14} />
@@ -614,6 +633,9 @@ const ListProduct = () => {
                           Sales {getSortIcon("number_Of_Purchases")}
                         </div>
                       </th>
+                      <th className="w-24 px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer">
+                        CheckSale
+                      </th>
                       <th className="w-28 px-3 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Actions
                       </th>
@@ -633,6 +655,9 @@ const ListProduct = () => {
                             </td>
                             <td className="px-3 py-4">
                               <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                            </td>
+                            <td className="px-3 py-4">
+                              <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
                             </td>
                             <td className="px-3 py-4">
                               <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -747,6 +772,7 @@ const ListProduct = () => {
                               </span>
                             </div>
                           </td>
+
                           <td className="px-3 py-4">
                             <div className="flex items-center">
                               <FaShoppingCart
@@ -758,6 +784,28 @@ const ListProduct = () => {
                               </span>
                             </div>
                           </td>
+
+                          <td className="px-3 py-4">
+                            <div className="flex items-center">
+                              <input
+                                className="text-center items-center "
+                                type="checkbox"
+                                checked={dataCheckSale.includes(
+                                  product.productId
+                                )}
+                                onChange={() =>
+                                  handleCheckboxChange(product.productId)
+                                }
+                              />
+                              {product.checkSale ? <span className="text-red-500">
+                                Sale
+                              </span>:
+                              <span className="text-blue-500">
+                                No
+                              </span>}
+                            </div>
+                          </td>
+
                           <td className="px-3 py-4 text-right">
                             <div className="flex items-center justify-end space-x-1">
                               <button

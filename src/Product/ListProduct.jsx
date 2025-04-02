@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { addProductToCart } from "./service";
 import toast, { Toaster } from "react-hot-toast";
@@ -42,7 +42,7 @@ const ProductCard = ({ product }) => {
   return (
     <>
       <Toaster />
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden h-[380px] w-full relative group">
+      <div className={`bg-white shadow-lg rounded-lg overflow-hidden h-[380px] w-full relative group `}>
         {/* Product image container with fixed height */}
         <div
           className="h-48 w-full relative overflow-hidden cursor-pointer"

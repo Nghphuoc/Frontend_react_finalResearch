@@ -4,8 +4,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const HeroSection = () => {
   const images = [
+    "saleimg.png",
     "https://athenalogistics.com.vn/wp-content/uploads/2023/06/Delivery-Order-la-gi.png",
-    
+    "Slide.png",
     "https://blog.dktcdn.net/files/ban-hang-order.png",
     "https://static.vecteezy.com/system/resources/previews/026/790/533/non_2x/order-button-flat-monochrome-isolated-object-order-now-editable-black-and-white-line-art-drawing-simple-outline-spot-illustration-for-web-graphic-design-vector.jpg",
   ];
